@@ -1,34 +1,89 @@
-# Ejercicio de Grafos en Python para Grupos de Estudiantes
+# Sistema de Gestion de Red Universitaria
 
-## Objetivo del Ejercicio
+Sistema modular de gestion de redes sociales universitarias basado en grafos no dirigidos con pesos. Permite gestionar estudiantes, amistades, realizar busquedas, generar recomendaciones y visualizar la red.
 
-Crear un sistema de recomendación de amistades para una red social universitaria utilizando grafos.
+## Caracteristicas
 
-## Descripción del Problema
+- Grafo no dirigido con soporte de pesos en aristas
+- Algoritmos de busqueda BFS y DFS
+- Sistema de recomendacion de amistades inteligente
+- Gestion CRUD completa de estudiantes y amistades
+- Generador de datos aleatorios para testing
+- Visualizacion interactiva con NetworkX
+- Persistencia en archivos CSV
+- Estadisticas detalladas de la red
 
-Implementar un grafo que represente las relaciones de amistad entre estudiantes y desarrollar algoritmos para recomendar nuevas amistades basándose en amigos en común.
+## Estructura del Proyecto
 
-## División de Tareas por Grupo (Estudiantes)
+```
+models/
+  ├── grafo.py          # Clase principal del grafo
+  └── estudiante.py     # Modelo de estudiante
 
-### Estructura del Grafo
+algorithms/
+  ├── busqueda.py       # BFS, DFS, camino mas corto
+  └── recomendacion.py  # Sistema de recomendaciones
 
-- Implementar la clase `Grafo` con listas de adyacencia
-- Métodos: `agregar_vertice()`, `agregar_arista()`, `obtener_vecinos()`
+utils/
+  ├── carga_datos.py    # Lectura/escritura CSV
+  ├── visualizacion.py  # Graficos con NetworkX
+  ├── generador.py      # Generador de datos aleatorios
+  └── estadisticas.py   # Metricas y analisis
 
-### Carga de Datos y Visualización
+Main.py                 # Interfaz CLI y orquestacion
+```
 
-- Leer datos de estudiantes y amistades desde archivos CSV
-- Implementar visualización básica del grafo
+## Instalacion
 
-### Algoritmo de Recomendaciones
+```bash
+pip install -r requirements.txt
+```
 
-- Implementar algoritmo de recomendación por amigos en común
-- Calcular coeficientes de similitud
+## Uso
 
-### Interfaz y Análisis
+```bash
+python Main.py
+```
 
-- Crear interfaz de usuario simple
-- Generar estadísticas y métricas del grafo
+## Formato de Datos CSV
+
+### estudiantes.csv
+```csv
+id,nombre,carrera
+1,Ana Garcia,Ingenieria
+2,Luis Martinez,Medicina
+```
+
+### amistades.csv
+```csv
+id1,id2,peso
+1,2,1
+1,3,2
+```
+
+Pesos:
+- 1: Amistad normal
+- 2: Mejor amigo
+- 3: Amigo cercano
+
+## Funcionalidades Principales
+
+### Consultas
+- Listar estudiantes
+- Ver amistades de un estudiante
+- Recomendar nuevas amistades
+- Buscar camino entre estudiantes
+- Busqueda BFS/DFS
+
+### Gestion
+- Agregar/eliminar estudiantes
+- Agregar/eliminar amistades
+- Modificar peso de amistades
+
+### Analisis
+- Estadisticas de la red
+- Visualizacion grafica
+- Generador de datos de prueba
 
 ---
 
@@ -436,95 +491,3 @@ id1,id2
 - Calidad del código (comentarios, estructura)
 - Funcionalidad completa del sistema
 - Creatividad en las mejoras adicionales
-
----
-
-## 🚀 Instalación y Configuración
-
-### Prerequisitos
-- Python 3.7 o superior
-- Git
-
-### 1. Clonar el repositorio
-```bash
-git clone https://github.com/JuanPabloFloresDiaz/Ejercicio-de-grafos.git
-cd Ejercicio-de-grafos
-```
-
-### 2. Crear entorno virtual
-```bash
-# Crear entorno virtual
-python3 -m venv venv
-
-# Activar entorno virtual
-# En Linux/Mac:
-source venv/bin/activate
-
-# En Windows:
-venv\Scripts\activate
-```
-
-### 3. Instalar dependencias
-```bash
-pip install -r requirements.txt
-```
-
-### 4. Ejecutar el proyecto
-```bash
-python Main.py
-```
-
-## 📋 Instrucciones de Uso
-
-### Para activar el entorno virtual:
-```bash
-# En Linux/Mac:
-source venv/bin/activate
-
-# En Windows:
-venv\Scripts\activate
-```
-
-### Para ejecutar el programa:
-```bash
-# Primero activar el entorno virtual
-source venv/bin/activate
-
-# Luego ejecutar el programa
-python Main.py
-```
-
-### Para desactivar el entorno virtual:
-```bash
-deactivate
-```
-
-### Para colaboradores:
-Si alguien más clona el proyecto, solo necesita:
-```bash
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-```
-
-## 📦 Dependencias del Proyecto
-
-- **matplotlib==3.8.2**: Para la visualización de grafos
-- **networkx==3.2.1**: Para el manejo de estructuras de grafos
-- **Librerías estándar**: csv, collections (incluidas en Python)
-
-## 🔧 Estructura del Proyecto
-
-```
-Ejercicio-de-grafos/
-├── Main.py              # Archivo principal del programa
-├── Teclado.py           # Módulo auxiliar
-├── Validaciones.py      # Módulo de validaciones
-├── estudiantes.csv      # Datos de estudiantes
-├── amistades.csv        # Datos de amistades
-├── requirements.txt     # Dependencias del proyecto
-├── README.md           # Documentación
-├── .gitignore          # Archivos ignorados por Git
-└── venv/               # Entorno virtual (no incluido en Git)
-```
-

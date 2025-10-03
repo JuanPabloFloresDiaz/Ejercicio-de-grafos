@@ -1,287 +1,70 @@
-import csv
-import matplotlib.pyplot as plt
-import networkx as nx
-from collections import defaultdict, deque
-
-# =============================================
-# ESTRUCTURA DEL GRAFO
-# =============================================
-class Grafo:
-    def __init__(self):
-        self.adj_list = defaultdict(dict)
-        self.estudiantes = {}
-
-    def agregar_estudiante(self, id_estudiante, nombre, carrera):
-        """Agrega un estudiante al grafo"""
-        self.estudiantes[id_estudiante] = {
-            'nombre': nombre,
-            'carrera': carrera
-        }
-        if id_estudiante not in self.adj_list:
-            self.adj_list[id_estudiante] = {}
-
-    def agregar_amistad(self, id1, id2):
-        """Agrega una relación de amistad entre dos estudiantes"""
-        if id1 in self.estudiantes and id2 in self.estudiantes:
-            self.adj_list[id1][id2] = 1 # Peso 1 para amistad
-            self.adj_list[id2][id1] = 1
-        else:
-            print(f"Error: Uno o ambos estudiantes no existen")
-
-    def obtener_amigos(self, id_estudiante):
-        """Retorna la lista de amigos de un estudiante"""
-        return list(self.adj_list[id_estudiante].keys())
-
-    def son_amigos(self, id1, id2):
-        """Verifica si dos estudiantes son amigos"""
-        return id2 in self.adj_list[id1]
-
-    def __str__(self):
-        result = "Grafo de Amistades:\n"
-        for estudiante in self.adj_list:
-            amigos = self.obtener_amigos(estudiante)
-            result += f"{self.estudiantes[estudiante]['nombre']}: {[self.estudiantes[amigo]['nombre'] for amigo in amigos]}\n"
-        return result
-
-# =============================================
-# CARGA DE DATOS Y VISUALIZACIÓN
-# =============================================
-def cargar_datos(grafo, archivo_estudiantes, archivo_amistades):
-    """Carga estudiantes y amistades desde archivos CSV"""
-
-    # Cargar estudiantes
-    try:
-        with open(archivo_estudiantes, 'r', encoding='utf-8') as file:
-            reader = csv.DictReader(file)
-            for row in reader:
-                grafo.agregar_estudiante(
-                    row['id'],
-                    row['nombre'],
-                    row['carrera']
-                )
-        print(f"Estudiantes cargados: {len(grafo.estudiantes)}")
-    except FileNotFoundError:
-        print("Creando datos de ejemplo...")
-        crear_datos_ejemplo(grafo)
-
-    # Cargar amistades
-    try:
-        with open(archivo_amistades, 'r', encoding='utf-8') as file:
-            reader = csv.DictReader(file)
-            for row in reader:
-                grafo.agregar_amistad(row['id1'], row['id2'])
-        print("Amistades cargadas exitosamente")
-    except FileNotFoundError:
-        print("Usando amistades de ejemplo")
-
-def crear_datos_ejemplo(grafo):
-    """Crea datos de ejemplo si no hay archivos"""
-    estudiantes = [
-        ('1', 'Ana García', 'Ingeniería'),
-        ('2', 'Luis Martínez', 'Medicina'),
-        ('3', 'María López', 'Derecho'),
-        ('4', 'Carlos Rodríguez', 'Ingeniería'),
-        ('5', 'Elena Torres', 'Psicología'),
-        ('6', 'Pedro Sánchez', 'Medicina'),
-        ('7', 'Sofía Ramírez', 'Derecho'),
-        ('8', 'Miguel Fernández', 'Ingeniería')
-    ]
-
-    for id, nombre, carrera in estudiantes:
-        grafo.agregar_estudiante(id, nombre, carrera)
-
-    # Crear algunas amistades
-    amistades = [('1','2'), ('1','3'), ('2','4'), ('3','5'),
-                 ('4','6'), ('5','7'), ('6','8'), ('7','8')]
-
-    for id1, id2 in amistades:
-        grafo.agregar_amistad(id1, id2)
-
-def visualizar_grafo(grafo):
-    """Visualiza el grafo usando networkx y matplotlib"""
-    G = nx.Graph()
-
-    # Agregar nodos
-    for id_est, info in grafo.estudiantes.items():
-        G.add_node(info['nombre'], carrera=info['carrera'])
-
-    # Agregar aristas
-    for id1 in grafo.adj_list:
-        for id2 in grafo.adj_list[id1]:
-            nombre1 = grafo.estudiantes[id1]['nombre']
-            nombre2 = grafo.estudiantes[id2]['nombre']
-            G.add_edge(nombre1, nombre2)
-
-    # Configurar visualización
-    plt.figure(figsize=(12, 8))
-
-    # Colores por carrera
-    carreras = list(set(info['carrera'] for info in grafo.estudiantes.values()))
-    colores = ['red', 'blue', 'green', 'orange', 'purple']
-    color_map = {}
-
-    for i, carrera in enumerate(carreras):
-        color_map[carrera] = colores[i % len(colores)]
-
-    node_colors = [color_map[grafo.estudiantes[id]['carrera']]
-                   for id in grafo.estudiantes]
-
-    # Dibujar grafo
-    pos = nx.spring_layout(G, k=1, iterations=50)
-    nx.draw(G, pos, with_labels=True, node_color=node_colors,
-            node_size=800, font_size=8, font_weight='bold')
-
-    # Leyenda
-    for carrera, color in color_map.items():
-        plt.plot([], [], 'o', color=color, label=carrera)
-    plt.legend()
-
-    plt.title("Red de Amistades Universitarias")
-    plt.show()
-
-# =============================================
-# ALGORITMO DE RECOMENDACIONES
-# =============================================
-def recomendar_amistades(grafo, id_estudiante, max_recomendaciones=5):
-    """
-    Recomienda amistades basándose en amigos en común
-    y misma carrera
-    """
-    if id_estudiante not in grafo.estudiantes:
-        return []
-
-    recomendaciones = {}
-    amigos_actuales = set(grafo.obtener_amigos(id_estudiante))
-    carrera_estudiante = grafo.estudiantes[id_estudiante]['carrera']
-
-    for posible_amigo in grafo.estudiantes:
-        # No recomendar a sí mismo ni a amigos actuales
-        if posible_amigo == id_estudiante or posible_amigo in amigos_actuales:
-            continue
-
-        # Calcular amigos en común
-        amigos_posible = set(grafo.obtener_amigos(posible_amigo))
-        amigos_comunes = amigos_actuales.intersection(amigos_posible)
-
-        # Calcular puntaje
-        puntaje = len(amigos_comunes) * 2 # Peso para amigos en común
-
-        # Bonus por misma carrera
-        if grafo.estudiantes[posible_amigo]['carrera'] == carrera_estudiante:
-            puntaje += 1
-
-        if puntaje > 0:
-            recomendaciones[posible_amigo] = {
-                'puntaje': puntaje,
-                'amigos_comunes': len(amigos_comunes),
-                'misma_carrera': grafo.estudiantes[posible_amigo]['carrera'] == carrera_estudiante
-            }
-
-    # Ordenar por puntaje y retornar las mejores recomendaciones
-    recomendaciones_ordenadas = sorted(
-        recomendaciones.items(),
-        key=lambda x: x[1]['puntaje'],
-        reverse=True
-    )[:max_recomendaciones]
-
-    return recomendaciones_ordenadas
-
-def camino_mas_corto(grafo, id_inicio, id_fin):
-    """Encuentra el camino más corto entre dos estudiantes usando BFS"""
-    if id_inicio not in grafo.estudiantes or id_fin not in grafo.estudiantes:
-        return None
-
-    if id_inicio == id_fin:
-        return [id_inicio]
-
-    visitado = set()
-    cola = deque([(id_inicio, [id_inicio])])
-
-    while cola:
-        actual, camino = cola.popleft()
-
-        if actual == id_fin:
-            return [grafo.estudiantes[id]['nombre'] for id in camino]
-
-        visitado.add(actual)
-        for vecino in grafo.obtener_amigos(actual):
-            if vecino not in visitado:
-                cola.append((vecino, camino + [vecino]))
-                visitado.add(vecino)
-
-    return None # No hay camino
-
-# =============================================
-# INTERFAZ Y ANÁLISIS
-# =============================================
-def mostrar_estadisticas(grafo):
-    """Muestra estadísticas básicas del grafo"""
-    print("\n" + "="*50)
-    print("ESTADÍSTICAS DE LA RED")
-    print("="*50)
-
-    num_estudiantes = len(grafo.estudiantes)
-    num_amistades = sum(len(amigos) for amigos in grafo.adj_list.values()) // 2
-
-    print(f"Total de estudiantes: {num_estudiantes}")
-    print(f"Total de amistades: {num_amistades}")
-    print(f"Promedio de amigos por estudiante: {num_amistades*2/num_estudiantes:.2f}")
-
-    # Estudiantes por carrera
-    carreras = {}
-    for info in grafo.estudiantes.values():
-        carrera = info['carrera']
-        carreras[carrera] = carreras.get(carrera, 0) + 1
-
-    print("\nEstudiantes por carrera:")
-    for carrera, cantidad in carreras.items():
-        print(f" {carrera}: {cantidad} estudiantes")
-
-    # Estudiantes más populares (con más amigos)
-    popularidad = []
-    for id_est in grafo.estudiantes:
-        num_amigos = len(grafo.obtener_amigos(id_est))
-        popularidad.append((grafo.estudiantes[id_est]['nombre'], num_amigos))
-
-    popularidad.sort(key=lambda x: x[1], reverse=True)
-    print(f"\nEstudiantes más populares:")
-    for nombre, amigos in popularidad[:3]:
-        print(f" {nombre}: {amigos} amigos")
+from models import Grafo
+from algorithms import bfs, dfs, camino_mas_corto, recomendar_amistades
+from utils import (
+    cargar_datos, 
+    guardar_datos,
+    visualizar_grafo, 
+    generar_datos_aleatorios,
+    mostrar_estadisticas
+)
 
 def interfaz_principal(grafo):
-    """Interfaz de usuario simple para interactuar con el sistema"""
+    """Interfaz de usuario para interactuar con el sistema"""
     while True:
-        print("\n" + "="*50)
-        print("SISTEMA DE RECOMENDACIÓN DE AMISTADES")
-        print("="*50)
-        print("1. Ver todos los estudiantes")
-        print("2. Ver amistades de un estudiante")
-        print("3. Recomendar amistades")
-        print("4. Encontrar camino entre estudiantes")
-        print("5. Ver estadísticas")
-        print("6. Visualizar grafo")
-        print("7. Salir")
+        print("\n" + "="*60)
+        print("SISTEMA DE GESTION DE RED UNIVERSITARIA")
+        print("="*60)
+        print("CONSULTAS:")
+        print("  1. Ver todos los estudiantes")
+        print("  2. Ver amistades de un estudiante")
+        print("  3. Recomendar amistades")
+        print("  4. Encontrar camino entre estudiantes")
+        print("  5. Busqueda BFS desde un estudiante")
+        print("  6. Busqueda DFS desde un estudiante")
+        print("\nGESTION:")
+        print("  7. Agregar estudiante")
+        print("  8. Eliminar estudiante")
+        print("  9. Agregar amistad")
+        print(" 10. Eliminar amistad")
+        print(" 11. Modificar peso de amistad")
+        print("\nANALISIS Y DATOS:")
+        print(" 12. Ver estadisticas")
+        print(" 13. Visualizar grafo")
+        print(" 14. Generar datos aleatorios")
+        print(" 15. Guardar cambios en CSV")
+        print("\n 0. Salir")
 
-        opcion = input("\nSelecciona una opción (1-7): ").strip()
+        opcion = input("\nOpcion: ").strip()
 
         if opcion == '1':
-            print("\nLISTA DE ESTUDIANTES:")
-            for id_est, info in grafo.estudiantes.items():
-                print(f"ID: {id_est} - {info['nombre']} ({info['carrera']})")
+            print("\n" + "="*60)
+            print("LISTA DE ESTUDIANTES")
+            print("="*60)
+            if not grafo.estudiantes:
+                print("No hay estudiantes registrados")
+            else:
+                for id_est, info in sorted(grafo.estudiantes.items()):
+                    num_amigos = len(grafo.obtener_amigos(id_est))
+                    print(f"ID: {id_est:3} | {info['nombre']:25} | {info['carrera']:20} | Amigos: {num_amigos}")
 
         elif opcion == '2':
             id_est = input("ID del estudiante: ").strip()
             if id_est in grafo.estudiantes:
                 amigos = grafo.obtener_amigos(id_est)
                 print(f"\nAmigos de {grafo.estudiantes[id_est]['nombre']}:")
-                for amigo_id in amigos:
-                    info_amigo = grafo.estudiantes[amigo_id]
-                    print(f" - {info_amigo['nombre']} ({info_amigo['carrera']})")
+                if not amigos:
+                    print("  Este estudiante no tiene amigos registrados")
+                else:
+                    for amigo_id in amigos:
+                        info_amigo = grafo.estudiantes[amigo_id]
+                        peso = grafo.obtener_peso_amistad(id_est, amigo_id)
+                        tipo = "Normal" if peso == 1 else "Mejor amigo" if peso == 2 else "Amigo cercano"
+                        print(f"  - {info_amigo['nombre']} ({info_amigo['carrera']}) - Nivel: {peso} ({tipo})")
             else:
-                print("Estudiante no encontrado")
+                print("Error: Estudiante no encontrado")
 
         elif opcion == '3':
-            id_est = input("ID del estudiante para recomendaciones: ").strip()
+            id_est = input("ID del estudiante: ").strip()
             if id_est in grafo.estudiantes:
                 recomendaciones = recomendar_amistades(grafo, id_est)
                 if recomendaciones:
@@ -289,48 +72,180 @@ def interfaz_principal(grafo):
                     for i, (id_rec, info) in enumerate(recomendaciones, 1):
                         estudiante = grafo.estudiantes[id_rec]
                         print(f"{i}. {estudiante['nombre']} ({estudiante['carrera']})")
-                        print(f" Puntaje: {info['puntaje']} | Amigos en común: {info['amigos_comunes']}")
+                        print(f"   Puntaje: {info['puntaje']:.1f} | Amigos en comun: {info['amigos_comunes']} | Misma carrera: {'Si' if info['misma_carrera'] else 'No'}")
                 else:
                     print("No hay recomendaciones disponibles")
             else:
-                print("Estudiante no encontrado")
+                print("Error: Estudiante no encontrado")
 
         elif opcion == '4':
             id1 = input("ID del primer estudiante: ").strip()
             id2 = input("ID del segundo estudiante: ").strip()
             camino = camino_mas_corto(grafo, id1, id2)
             if camino:
-                print(f"\nCamino más corto:")
+                print(f"\nCamino mas corto ({len(camino)} nodos):")
                 print(" -> ".join(camino))
             else:
-                print("No existe camino entre estos estudiantes")
+                print("No existe conexion entre estos estudiantes")
 
         elif opcion == '5':
-            mostrar_estadisticas(grafo)
+            id_est = input("ID del estudiante inicial: ").strip()
+            if id_est in grafo.estudiantes:
+                visitados = bfs(grafo, id_est)
+                print(f"\nRecorrido BFS desde {grafo.estudiantes[id_est]['nombre']}:")
+                nombres = [grafo.estudiantes[id]['nombre'] for id in visitados]
+                print(" -> ".join(nombres))
+                print(f"\nTotal de nodos alcanzables: {len(visitados)}")
+            else:
+                print("Error: Estudiante no encontrado")
 
         elif opcion == '6':
-            print("Generando visualización...")
-            visualizar_grafo(grafo)
+            id_est = input("ID del estudiante inicial: ").strip()
+            if id_est in grafo.estudiantes:
+                visitados = dfs(grafo, id_est)
+                print(f"\nRecorrido DFS desde {grafo.estudiantes[id_est]['nombre']}:")
+                nombres = [grafo.estudiantes[id]['nombre'] for id in visitados]
+                print(" -> ".join(nombres))
+                print(f"\nTotal de nodos alcanzables: {len(visitados)}")
+            else:
+                print("Error: Estudiante no encontrado")
 
         elif opcion == '7':
-            print("¡Hasta luego!")
+            print("\n--- Agregar Estudiante ---")
+            id_est = input("ID: ").strip()
+            if id_est in grafo.estudiantes:
+                print("Error: Ya existe un estudiante con ese ID")
+            else:
+                nombre = input("Nombre completo: ").strip()
+                carrera = input("Carrera: ").strip()
+                grafo.agregar_estudiante(id_est, nombre, carrera)
+                print(f"Estudiante {nombre} agregado exitosamente")
+
+        elif opcion == '8':
+            id_est = input("ID del estudiante a eliminar: ").strip()
+            if id_est in grafo.estudiantes:
+                nombre = grafo.estudiantes[id_est]['nombre']
+                confirmar = input(f"Confirmar eliminacion de {nombre}? (s/n): ").strip().lower()
+                if confirmar == 's':
+                    grafo.eliminar_estudiante(id_est)
+                    print(f"Estudiante {nombre} eliminado exitosamente")
+                else:
+                    print("Operacion cancelada")
+            else:
+                print("Error: Estudiante no encontrado")
+
+        elif opcion == '9':
+            print("\n--- Agregar Amistad ---")
+            id1 = input("ID del primer estudiante: ").strip()
+            id2 = input("ID del segundo estudiante: ").strip()
+            if id1 == id2:
+                print("Error: No puede crear amistad consigo mismo")
+            elif grafo.son_amigos(id1, id2):
+                print("Error: Ya existe una amistad entre estos estudiantes")
+            else:
+                peso = input("Peso de la amistad (1=Normal, 2=Mejor amigo, 3=Amigo cercano) [1]: ").strip()
+                peso = int(peso) if peso.isdigit() and int(peso) in [1, 2, 3] else 1
+                if grafo.agregar_amistad(id1, id2, peso):
+                    print("Amistad agregada exitosamente")
+                else:
+                    print("Error: Uno o ambos estudiantes no existen")
+
+        elif opcion == '10':
+            print("\n--- Eliminar Amistad ---")
+            id1 = input("ID del primer estudiante: ").strip()
+            id2 = input("ID del segundo estudiante: ").strip()
+            if grafo.eliminar_amistad(id1, id2):
+                print("Amistad eliminada exitosamente")
+            else:
+                print("Error: No existe amistad entre estos estudiantes")
+
+        elif opcion == '11':
+            print("\n--- Modificar Peso de Amistad ---")
+            id1 = input("ID del primer estudiante: ").strip()
+            id2 = input("ID del segundo estudiante: ").strip()
+            if not grafo.son_amigos(id1, id2):
+                print("Error: No existe amistad entre estos estudiantes")
+            else:
+                peso_actual = grafo.obtener_peso_amistad(id1, id2)
+                print(f"Peso actual: {peso_actual}")
+                nuevo_peso = input("Nuevo peso (1=Normal, 2=Mejor amigo, 3=Amigo cercano): ").strip()
+                if nuevo_peso.isdigit() and int(nuevo_peso) in [1, 2, 3]:
+                    grafo.actualizar_peso_amistad(id1, id2, int(nuevo_peso))
+                    print("Peso actualizado exitosamente")
+                else:
+                    print("Error: Peso invalido")
+
+        elif opcion == '12':
+            mostrar_estadisticas(grafo)
+
+        elif opcion == '13':
+            if not grafo.estudiantes:
+                print("Error: No hay estudiantes para visualizar")
+            else:
+                print("Generando visualizacion...")
+                visualizar_grafo(grafo)
+
+        elif opcion == '14':
+            print("\n--- Generar Datos Aleatorios ---")
+            print("ADVERTENCIA: Esto eliminara todos los datos actuales")
+            confirmar = input("Continuar? (s/n): ").strip().lower()
+            if confirmar == 's':
+                num_est = input("Numero de estudiantes [30]: ").strip()
+                num_est = int(num_est) if num_est.isdigit() else 30
+                densidad = input("Densidad de amistades (0.0-1.0) [0.15]: ").strip()
+                try:
+                    densidad = float(densidad) if densidad else 0.15
+                    densidad = max(0.0, min(1.0, densidad))
+                except:
+                    densidad = 0.15
+                
+                # Limpiar grafo actual
+                grafo.estudiantes.clear()
+                grafo.adj_list.clear()
+                
+                generar_datos_aleatorios(grafo, num_est, densidad)
+                print("\nDatos aleatorios generados exitosamente")
+            else:
+                print("Operacion cancelada")
+
+        elif opcion == '15':
+            print("\n--- Guardar Cambios ---")
+            if guardar_datos(grafo):
+                print("Datos guardados exitosamente")
+            else:
+                print("Error al guardar los datos")
+
+        elif opcion == '0':
+            print("\nCerrando sistema...")
+            guardar = input("Guardar cambios antes de salir? (s/n): ").strip().lower()
+            if guardar == 's':
+                guardar_datos(grafo)
+            print("Hasta luego!")
             break
 
         else:
-            print("Opción no válida")
+            print("Error: Opcion no valida")
 
-# =============================================
-# EJECUCIÓN PRINCIPAL
-# =============================================
 def main():
-    # Crear grafo
+    """Punto de entrada principal del sistema"""
+    print("="*60)
+    print("SISTEMA DE GESTION DE RED UNIVERSITARIA")
+    print("="*60)
+    
     red_universitaria = Grafo()
-
-    # Cargar datos
-    cargar_datos(red_universitaria, 'estudiantes.csv', 'amistades.csv')
-    # Mostrar información inicial
-    print(red_universitaria)
-
+    
+    # Intentar cargar datos existentes
+    if not cargar_datos(red_universitaria, 'estudiantes.csv', 'amistades.csv'):
+        print("\nNo se encontraron archivos de datos.")
+        opcion = input("Generar datos aleatorios para pruebas? (s/n): ").strip().lower()
+        if opcion == 's':
+            generar_datos_aleatorios(red_universitaria, 20, 0.2)
+            guardar_datos(red_universitaria)
+        else:
+            print("Iniciando con red vacia...")
+    
+    print(f"\nRed cargada: {len(red_universitaria.estudiantes)} estudiantes")
+    
     # Ejecutar interfaz
     interfaz_principal(red_universitaria)
 

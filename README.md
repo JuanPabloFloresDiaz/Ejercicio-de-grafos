@@ -415,18 +415,18 @@ id1,id2
 
 ### Mejoras
 
-- Implementar eliminación de estudiantes y amistades
-- Agregar pesos a las amistades (mejores amigos)
-- Implementar búsqueda en profundidad (DFS)
-- Crear generador de datos aleatorios para pruebas
-- Mejorar la visualización con diferentes layouts
-- Exportar el grafo a formato GEXF para Gephi [Esto ya no se hara (es opcional)]
-- Implementar algoritmo de comunidades (Louvain)
-- Agregar recomendaciones por intereses comunes
-- Calcular centralidad de los nodos
-- Crear interfaz web con Streamlit [Esto ya no se hara (es opcional)]
-- Generar reportes PDF con estadísticas
-- Implementar persistencia de datos con JSON
+- Implementar eliminación de estudiantes y amistades - Alessandro
+- Agregar pesos a las amistades (mejores amigos) - Alessandro
+- Implementar búsqueda en profundidad (DFS) - Alessandro
+- Crear generador de datos aleatorios para pruebas - Alessandro
+- Mejorar la visualización con diferentes layouts - Oscar
+- Exportar el grafo a formato GEXF para Gephi [Esto ya no se hara (es opcional)] - Oscar
+- Implementar algoritmo de comunidades (Louvain) - Oscar
+- Agregar recomendaciones por intereses comunes - Oscar
+- Calcular centralidad de los nodos - Juan Pablo
+- Crear interfaz web con Streamlit [Esto ya no se hara (es opcional)] - Juan Pablo
+- Generar reportes PDF con estadísticas - Juan Pablo
+- Implementar persistencia de datos con JSON - Juan Pablo
 
 ---
 

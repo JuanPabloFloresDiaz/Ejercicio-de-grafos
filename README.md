@@ -436,3 +436,95 @@ id1,id2
 - Calidad del código (comentarios, estructura)
 - Funcionalidad completa del sistema
 - Creatividad en las mejoras adicionales
+
+---
+
+## 🚀 Instalación y Configuración
+
+### Prerequisitos
+- Python 3.7 o superior
+- Git
+
+### 1. Clonar el repositorio
+```bash
+git clone https://github.com/JuanPabloFloresDiaz/Ejercicio-de-grafos.git
+cd Ejercicio-de-grafos
+```
+
+### 2. Crear entorno virtual
+```bash
+# Crear entorno virtual
+python3 -m venv venv
+
+# Activar entorno virtual
+# En Linux/Mac:
+source venv/bin/activate
+
+# En Windows:
+venv\Scripts\activate
+```
+
+### 3. Instalar dependencias
+```bash
+pip install -r requirements.txt
+```
+
+### 4. Ejecutar el proyecto
+```bash
+python Main.py
+```
+
+## 📋 Instrucciones de Uso
+
+### Para activar el entorno virtual:
+```bash
+# En Linux/Mac:
+source venv/bin/activate
+
+# En Windows:
+venv\Scripts\activate
+```
+
+### Para ejecutar el programa:
+```bash
+# Primero activar el entorno virtual
+source venv/bin/activate
+
+# Luego ejecutar el programa
+python Main.py
+```
+
+### Para desactivar el entorno virtual:
+```bash
+deactivate
+```
+
+### Para colaboradores:
+Si alguien más clona el proyecto, solo necesita:
+```bash
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
+## 📦 Dependencias del Proyecto
+
+- **matplotlib==3.8.2**: Para la visualización de grafos
+- **networkx==3.2.1**: Para el manejo de estructuras de grafos
+- **Librerías estándar**: csv, collections (incluidas en Python)
+
+## 🔧 Estructura del Proyecto
+
+```
+Ejercicio-de-grafos/
+├── Main.py              # Archivo principal del programa
+├── Teclado.py           # Módulo auxiliar
+├── Validaciones.py      # Módulo de validaciones
+├── estudiantes.csv      # Datos de estudiantes
+├── amistades.csv        # Datos de amistades
+├── requirements.txt     # Dependencias del proyecto
+├── README.md           # Documentación
+├── .gitignore          # Archivos ignorados por Git
+└── venv/               # Entorno virtual (no incluido en Git)
+```
+

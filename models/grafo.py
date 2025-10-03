@@ -5,11 +5,12 @@ class Grafo:
         self.adj_list = defaultdict(dict)
         self.estudiantes = {}
     
-    def agregar_estudiante(self, id_estudiante, nombre, carrera):
+    def agregar_estudiante(self, id_estudiante, nombre, carrera, intereses=None):
         """Agrega un estudiante al grafo"""
         self.estudiantes[id_estudiante] = {
             'nombre': nombre,
-            'carrera': carrera
+            'carrera': carrera,
+            'intereses': intereses if intereses else []
         }
         if id_estudiante not in self.adj_list:
             self.adj_list[id_estudiante] = {}

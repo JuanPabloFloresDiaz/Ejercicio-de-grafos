@@ -18,6 +18,12 @@ CARRERAS = [
     'Administracion', 'Economia', 'Diseno', 'Comunicacion', 'Enfermeria'
 ]
 
+INTERESES = [
+    'Deportes', 'Musica', 'Cine', 'Lectura', 'Tecnologia', 'Arte', 'Videojuegos',
+    'Fotografia', 'Viajes', 'Cocina', 'Moda', 'Teatro', 'Baile', 'Ciencia',
+    'Politica', 'Naturaleza', 'Historia', 'Literatura', 'Programacion'
+]
+
 def generar_datos_aleatorios(grafo, num_estudiantes=30, densidad_amistades=0.15):
     """
     Genera datos aleatorios para testing
@@ -35,7 +41,12 @@ def generar_datos_aleatorios(grafo, num_estudiantes=30, densidad_amistades=0.15)
         nombre = f"{random.choice(NOMBRES)} {random.choice(APELLIDOS)}"
         carrera = random.choice(CARRERAS)
         id_est = str(i)
-        grafo.agregar_estudiante(id_est, nombre, carrera)
+        
+        # Generar intereses aleatorios (2-5 intereses por estudiante)
+        num_intereses = random.randint(2, 5)
+        intereses = random.sample(INTERESES, num_intereses)
+        
+        grafo.agregar_estudiante(id_est, nombre, carrera, intereses)
         ids_generados.append(id_est)
     
     print(f"Estudiantes generados: {num_estudiantes}")

@@ -1,0 +1,275 @@
+{
+  "metadata": {
+    "fecha_exportacion": "2025-10-03T11:42:33.772720",
+    "num_estudiantes": 15,
+    "num_amistades": 22
+  },
+  "estudiantes": [
+    {
+      "id": "1",
+      "nombre": "Cristina Diaz",
+      "carrera": "Comunicacion",
+      "intereses": [
+        "Teatro",
+        "Historia"
+      ]
+    },
+    {
+      "id": "2",
+      "nombre": "Laura Gomez",
+      "carrera": "Medicina",
+      "intereses": [
+        "Moda",
+        "Literatura",
+        "Videojuegos"
+      ]
+    },
+    {
+      "id": "3",
+      "nombre": "Jose Sanchez",
+      "carrera": "Comunicacion",
+      "intereses": [
+        "Historia",
+        "Musica",
+        "Ciencia",
+        "Baile",
+        "Teatro"
+      ]
+    },
+    {
+      "id": "4",
+      "nombre": "Raquel Fernandez",
+      "carrera": "Diseno",
+      "intereses": [
+        "Cine",
+        "Literatura",
+        "Arte"
+      ]
+    },
+    {
+      "id": "5",
+      "nombre": "Patricia Ramirez",
+      "carrera": "Administracion",
+      "intereses": [
+        "Videojuegos",
+        "Deportes",
+        "Lectura"
+      ]
+    },
+    {
+      "id": "6",
+      "nombre": "Pedro Torres",
+      "carrera": "Medicina",
+      "intereses": [
+        "Historia",
+        "Videojuegos",
+        "Naturaleza",
+        "Programacion",
+        "Musica"
+      ]
+    },
+    {
+      "id": "7",
+      "nombre": "Maria Fernandez",
+      "carrera": "Medicina",
+      "intereses": [
+        "Moda",
+        "Programacion",
+        "Literatura",
+        "Videojuegos",
+        "Teatro"
+      ]
+    },
+    {
+      "id": "8",
+      "nombre": "Luis Jimenez",
+      "carrera": "Enfermeria",
+      "intereses": [
+        "Tecnologia",
+        "Politica"
+      ]
+    },
+    {
+      "id": "9",
+      "nombre": "Antonio Ramirez",
+      "carrera": "Diseno",
+      "intereses": [
+        "Arte",
+        "Cocina",
+        "Musica"
+      ]
+    },
+    {
+      "id": "10",
+      "nombre": "Javier Ruiz",
+      "carrera": "Diseno",
+      "intereses": [
+        "Programacion",
+        "Moda"
+      ]
+    },
+    {
+      "id": "11",
+      "nombre": "Cristina Fernandez",
+      "carrera": "Enfermeria",
+      "intereses": [
+        "Cine",
+        "Politica",
+        "Videojuegos"
+      ]
+    },
+    {
+      "id": "12",
+      "nombre": "Cristina Moreno",
+      "carrera": "Diseno",
+      "intereses": [
+        "Literatura",
+        "Tecnologia",
+        "Fotografia"
+      ]
+    },
+    {
+      "id": "13",
+      "nombre": "Francisco Gutierrez",
+      "carrera": "Derecho",
+      "intereses": [
+        "Historia",
+        "Musica",
+        "Videojuegos"
+      ]
+    },
+    {
+      "id": "14",
+      "nombre": "Isabel Navarro",
+      "carrera": "Arquitectura",
+      "intereses": [
+        "Historia",
+        "Politica"
+      ]
+    },
+    {
+      "id": "15",
+      "nombre": "Manuel Martinez",
+      "carrera": "Administracion",
+      "intereses": [
+        "Videojuegos",
+        "Arte",
+        "Viajes",
+        "Lectura",
+        "Literatura"
+      ]
+    }
+  ],
+  "amistades": [
+    {
+      "id1": "1",
+      "id2": "5",
+      "peso": 1
+    },
+    {
+      "id1": "1",
+      "id2": "14",
+      "peso": 1
+    },
+    {
+      "id1": "2",
+      "id2": "8",
+      "peso": 1
+    },
+    {
+      "id1": "2",
+      "id2": "11",
+      "peso": 2
+    },
+    {
+      "id1": "3",
+      "id2": "5",
+      "peso": 1
+    },
+    {
+      "id1": "3",
+      "id2": "9",
+      "peso": 1
+    },
+    {
+      "id1": "5",
+      "id2": "8",
+      "peso": 2
+    },
+    {
+      "id1": "5",
+      "id2": "9",
+      "peso": 2
+    },
+    {
+      "id1": "5",
+      "id2": "10",
+      "peso": 1
+    },
+    {
+      "id1": "5",
+      "id2": "13",
+      "peso": 1
+    },
+    {
+      "id1": "7",
+      "id2": "8",
+      "peso": 1
+    },
+    {
+      "id1": "8",
+      "id2": "10",
+      "peso": 1
+    },
+    {
+      "id1": "8",
+      "id2": "15",
+      "peso": 2
+    },
+    {
+      "id1": "9",
+      "id2": "10",
+      "peso": 1
+    },
+    {
+      "id1": "9",
+      "id2": "14",
+      "peso": 1
+    },
+    {
+      "id1": "10",
+      "id2": "11",
+      "peso": 1
+    },
+    {
+      "id1": "11",
+      "id2": "13",
+      "peso": 1
+    },
+    {
+      "id1": "11",
+      "id2": "15",
+      "peso": 1
+    },
+    {
+      "id1": "12",
+      "id2": "14",
+      "peso": 1
+    },
+    {
+      "id1": "12",
+      "id2": "15",
+      "peso": 1
+    },
+    {
+      "id1": "13",
+      "id2": "14",
+      "peso": 1
+    },
+    {
+      "id1": "13",
+      "id2": "15",
+      "peso": 1
+    }
+  ]
+}

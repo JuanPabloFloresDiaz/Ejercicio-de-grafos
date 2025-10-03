@@ -46,3 +46,51 @@ def recomendar_amistades(grafo, id_estudiante, max_recomendaciones=5):
     )[:max_recomendaciones]
     
     return recomendaciones_ordenadas
+
+def recomendar_por_intereses(grafo, id_estudiante, max_recomendaciones=5):
+    """
+    Recomienda amistades basandose en intereses comunes
+    """
+    if id_estudiante not in grafo.estudiantes:
+        return []
+    
+    recomendaciones = {}
+    amigos_actuales = set(grafo.obtener_amigos(id_estudiante))
+    intereses_estudiante = set(grafo.estudiantes[id_estudiante].get('intereses', []))
+    
+    if not intereses_estudiante:
+        return []
+    
+    for posible_amigo in grafo.estudiantes:
+        if posible_amigo == id_estudiante or posible_amigo in amigos_actuales:
+            continue
+        
+        intereses_posible = set(grafo.estudiantes[posible_amigo].get('intereses', []))
+        
+        if not intereses_posible:
+            continue
+        
+        # Calcular intereses comunes
+        intereses_comunes = intereses_estudiante.intersection(intereses_posible)
+        
+        if intereses_comunes:
+            # Puntaje basado en intereses comunes
+            puntaje = len(intereses_comunes) * 3
+            
+            # Bonus por misma carrera
+            if grafo.estudiantes[posible_amigo]['carrera'] == grafo.estudiantes[id_estudiante]['carrera']:
+                puntaje += 2
+            
+            recomendaciones[posible_amigo] = {
+                'puntaje': puntaje,
+                'intereses_comunes': list(intereses_comunes),
+                'num_intereses_comunes': len(intereses_comunes)
+            }
+    
+    recomendaciones_ordenadas = sorted(
+        recomendaciones.items(),
+        key=lambda x: x[1]['puntaje'],
+        reverse=True
+    )[:max_recomendaciones]
+    
+    return recomendaciones_ordenadas

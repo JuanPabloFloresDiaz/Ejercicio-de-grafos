@@ -1,40 +1,75 @@
 from models import Grafo
-from algorithms import bfs, dfs, camino_mas_corto, recomendar_amistades
+from algorithms import (
+    bfs, dfs, camino_mas_corto, 
+    recomendar_amistades, recomendar_por_intereses,
+    detectar_comunidades_louvain, estadisticas_comunidades,
+    calcular_centralidad_grado, calcular_centralidad_intermediacion,
+    calcular_centralidad_cercania, calcular_centralidad_eigenvector,
+    obtener_nodos_mas_centrales
+)
 from utils import (
     cargar_datos, 
     guardar_datos,
     visualizar_grafo, 
     generar_datos_aleatorios,
-    mostrar_estadisticas
+    mostrar_estadisticas,
+    guardar_json,
+    cargar_json,
+    exportar_backup,
+    generar_reporte_pdf
 )
 
 def interfaz_principal(grafo):
     """Interfaz de usuario para interactuar con el sistema"""
     while True:
-        print("\n" + "="*60)
-        print("SISTEMA DE GESTION DE RED UNIVERSITARIA")
-        print("="*60)
-        print("CONSULTAS:")
-        print("  1. Ver todos los estudiantes")
-        print("  2. Ver amistades de un estudiante")
-        print("  3. Recomendar amistades")
-        print("  4. Encontrar camino entre estudiantes")
-        print("  5. Busqueda BFS desde un estudiante")
-        print("  6. Busqueda DFS desde un estudiante")
-        print("\nGESTION:")
-        print("  7. Agregar estudiante")
-        print("  8. Eliminar estudiante")
-        print("  9. Agregar amistad")
-        print(" 10. Eliminar amistad")
-        print(" 11. Modificar peso de amistad")
-        print("\nANALISIS Y DATOS:")
-        print(" 12. Ver estadisticas")
-        print(" 13. Visualizar grafo")
-        print(" 14. Generar datos aleatorios")
-        print(" 15. Guardar cambios en CSV")
-        print("\n 0. Salir")
+        print("\n" + "="*70)
+        print(" "*15 + "SISTEMA DE GESTION DE RED UNIVERSITARIA")
+        print("="*70)
+        print("\n📊 CONSULTAS Y BUSQUEDAS:")
+        print("  1.  Ver todos los estudiantes")
+        print("  2.  Ver amistades de un estudiante")
+        print("  3.  Buscar por nombre o carrera")
+        print("  4.  Ver intereses de un estudiante")
+        print("  5.  Encontrar camino entre estudiantes")
+        print("  6.  Busqueda BFS desde un estudiante")
+        print("  7.  Busqueda DFS desde un estudiante")
+        
+        print("\n🤝 RECOMENDACIONES:")
+        print("  8.  Recomendar amistades (por amigos comunes)")
+        print("  9.  Recomendar amistades (por intereses)")
+        
+        print("\n👥 GESTION DE ESTUDIANTES:")
+        print(" 10.  Agregar estudiante")
+        print(" 11.  Eliminar estudiante")
+        print(" 12.  Modificar datos de estudiante")
+        print(" 13.  Agregar/Eliminar intereses")
+        
+        print("\n💫 GESTION DE AMISTADES:")
+        print(" 14.  Agregar amistad")
+        print(" 15.  Eliminar amistad")
+        print(" 16.  Modificar peso de amistad")
+        
+        print("\n📈 ANALISIS AVANZADO:")
+        print(" 17.  Ver estadisticas generales")
+        print(" 18.  Detectar comunidades (Louvain)")
+        print(" 19.  Calcular centralidad de nodos")
+        print(" 20.  Analizar nodos mas influyentes")
+        
+        print("\n🎨 VISUALIZACION:")
+        print(" 21.  Visualizar grafo completo")
+        print(" 22.  Generar reporte PDF")
+        
+        print("\n💾 DATOS Y PERSISTENCIA:")
+        print(" 23.  Guardar en CSV")
+        print(" 24.  Guardar en JSON")
+        print(" 25.  Cargar desde JSON")
+        print(" 26.  Crear backup")
+        print(" 27.  Generar datos aleatorios")
+        
+        print("\n 0.  Salir del sistema")
+        print("="*70)
 
-        opcion = input("\nOpcion: ").strip()
+        opcion = input("\n👉 Seleccione una opcion: ").strip()
 
         if opcion == '1':
             print("\n" + "="*60)
